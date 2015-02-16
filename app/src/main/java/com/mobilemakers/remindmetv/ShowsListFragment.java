@@ -1,5 +1,6 @@
 package com.mobilemakers.remindmetv;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +10,7 @@ import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -80,6 +82,16 @@ public class ShowsListFragment extends ListFragment {
         List<Show> shows = new ArrayList<>();
         mAdapter = new ShowAdapter(getActivity(), shows);
         setListAdapter(mAdapter);
+        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Show selectedShow = (Show)mAdapter.getItem(position);
+                //TODO Set the correct class name and make Show parcelable
+                //Intent intent = new Intent(getActivity(), CompleteInformation.class);
+                //intent.putExtra(selectedShow);
+                //startActivity(intent);
+            }
+        });
     }
 
     private void fetchShowsInQueue(String showName) {
