@@ -2,13 +2,7 @@ package com.mobilemakers.remindmetv;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.LightingColorFilter;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -19,11 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
-
-import java.util.logging.Filter;
 
 public class StartScreenFragment extends Fragment implements View.OnClickListener, TextWatcher {
 
@@ -37,7 +26,7 @@ public class StartScreenFragment extends Fragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_start_screen, container, false);
-        wireupViews(rootView);
+        wireUpViews(rootView);
         setupListenersAndWatchers();
         return rootView;
     }
@@ -46,15 +35,16 @@ public class StartScreenFragment extends Fragment implements View.OnClickListene
         mEditTextSearch.addTextChangedListener(this);
     }
 
-    private void wireupViews(View rootView) {
+    private void wireUpViews(View rootView) {
         mImageButtonSearch = (ImageButton)rootView.findViewById(R.id.imageButton_startscreen_search);
         mEditTextSearch = (EditText)rootView.findViewById(R.id.editText_startscreen_search);
     }
 
     @Override
     public void onClick(View v) {
-        //Intent searchIntent = new Intent(StartScreenFragment.this, SearchScreen.class); // Insert search screen activity.
-        //startActivity(searchIntent);
+        Intent searchIntent = new Intent(getActivity(), ShowsListActivity.class);
+        searchIntent.putExtra(ShowsListActivity.EXTRA_SEARCH , mEditTextSearch.getText().toString());
+        startActivity(searchIntent);
     }
 
     @Override
@@ -69,7 +59,7 @@ public class StartScreenFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void afterTextChanged(Editable s) {
-        if (!TextUtils.isEmpty(s)) {
+        if (!TextUtils.isEmpty(s.toString().trim())) {
             mImageButtonSearch.setOnClickListener(this);
             ((GradientDrawable)mImageButtonSearch.getBackground()).setColor(Color.GREEN);
         }
@@ -77,7 +67,5 @@ public class StartScreenFragment extends Fragment implements View.OnClickListene
             mImageButtonSearch.setOnClickListener(null);
             ((GradientDrawable)mImageButtonSearch.getBackground()).setColor(Color.RED);
         }
-
-
     }
 }
