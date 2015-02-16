@@ -4,5 +4,7 @@
     <string name="app_name">RemindMeTV</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_shows_list">Shows List</string>
+    <string name="edit_text_search_list">Search for a TV Show</string>
 
 </resources>
