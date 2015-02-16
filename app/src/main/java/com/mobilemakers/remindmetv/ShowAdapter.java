@@ -43,11 +43,9 @@ public class ShowAdapter extends ArrayAdapter<Show>{
         if (rowView != null){
             TextView textViewName = (TextView)rowView.findViewById(R.id.text_view_show_name);
             TextView textViewChannel = (TextView)rowView.findViewById(R.id.text_view_show_channel);
-            TextView textViewCategory = (TextView)rowView.findViewById(R.id.text_view_show_category);
 
             textViewName.setText(mShows.get(position).getName());
             textViewChannel.setText(mShows.get(position).getChannel());
-            textViewCategory.setText(mShows.get(position).getCategory());
         }
     }
 }

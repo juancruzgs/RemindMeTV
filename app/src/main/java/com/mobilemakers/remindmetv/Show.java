@@ -4,9 +4,13 @@ public class Show {
 
     private String name;
     private String channel;
-    private String category;
 
     public Show() {
+    }
+
+    public Show(String name, String channel) {
+        this.name = name;
+        this.channel = channel;
     }
 
     public String getName() {
@@ -25,11 +29,4 @@ public class Show {
         this.channel = channel;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
 }
