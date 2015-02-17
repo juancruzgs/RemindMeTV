@@ -7,8 +7,9 @@
     <string name="title_activity_shows_list">Shows List</string>
     <string name="edit_text_show_list_search_hint">Search for a TV Show</string>
     <string name="textView_welcome_message">Welcome to RemindMeTv !</string>
-    <string name="textView_startscreen_tip">Type a TV show, program or movie and tap the magnifying glass to start&#8230;</string>
+    <string name="textView_startscreen_tip">Type a TV show, program or movie and tap the magnifying glass to start…</string>
     <string name="button_startscreen_search">Find</string>
     <string name="editText_startscreen_search_hint">Type your keywords here...</string>
+    <string name="title_activity_complete_information">Complete Information</string>
 
 </resources>

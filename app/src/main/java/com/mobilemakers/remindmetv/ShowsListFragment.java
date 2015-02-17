@@ -121,10 +121,9 @@ public class ShowsListFragment extends ListFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Show selectedShow = (Show) mAdapter.getItem(position);
-                //TODO Set the correct class name and make Show parcelable
-                //Intent intent = new Intent(getActivity(), CompleteInformation.class);
-                //intent.putExtra(selectedShow);
-                //startActivity(intent);
+                Intent intent = new Intent(getActivity(), CompleteInformationActivity.class);
+                intent.putExtra(CompleteInformationActivity.EXTRA_SHOW, selectedShow);
+                startActivity(intent);
             }
         });
     }
