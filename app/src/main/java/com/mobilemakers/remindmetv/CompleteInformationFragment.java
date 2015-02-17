@@ -80,9 +80,10 @@ public class CompleteInformationFragment extends Fragment {
                 intent.putExtra(CalendarContract.Events.TITLE, mShow.getName());
                 intent.putExtra(CalendarContract.Events.HAS_ALARM, 1);
                 //TODO Set timezone extra (read it from the API)
-                //intent.putExtra(CalendarContract.Reminders.TITLE, "A Test Event from android app");
-                //intent.putExtra(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
-                //intent.putExtra(CalendarContract.Reminders.MINUTES, 20);
+                //TODO Get Event ID (startActivityForResult)
+                intent.putExtra(CalendarContract.Reminders.TITLE, "A Test Event from android app");
+                intent.putExtra(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+                intent.putExtra(CalendarContract.Reminders.MINUTES, 20);
                 startActivity(intent);
             }
         });
