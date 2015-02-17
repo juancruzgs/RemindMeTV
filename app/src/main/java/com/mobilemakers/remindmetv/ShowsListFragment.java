@@ -35,9 +35,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class ShowsListFragment extends ListFragment {
 
     public static final String EXTRA_SEARCH = "extra_search";
