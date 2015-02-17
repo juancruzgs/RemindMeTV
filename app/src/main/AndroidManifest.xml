@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mobilemakers.remindmetv" >
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -21,6 +21,10 @@
         <activity
             android:name=".ShowsListActivity"
             android:label="@string/title_activity_shows_list" >
+        </activity>
+        <activity
+            android:name=".CompleteInformationActivity"
+            android:label="@string/title_activity_complete_information" >
         </activity>
     </application>
 

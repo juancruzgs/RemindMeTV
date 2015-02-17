@@ -51,6 +51,16 @@ public class ShowsListFragment extends ListFragment {
     final String SHOW = "show";
     final String NAME = "name";
     final String CHANNEL = "network";
+    final String LINK = "link";
+    final String STARTED = "started";
+    final String ENDED = "ended";
+    final String SEASONS = "seasons";
+    final String STATUS = "status";
+    final String RUNTIME = "runtime";
+    final String GENRES = "genres";
+    final String AIRTIME = "airtime";
+    final String AIRDAY = "airday";
+    final String AKAS = "akas";
 
     public ShowsListFragment() {
     }
@@ -121,10 +131,9 @@ public class ShowsListFragment extends ListFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Show selectedShow = (Show) mAdapter.getItem(position);
-                //TODO Set the correct class name and make Show parcelable
-                //Intent intent = new Intent(getActivity(), CompleteInformation.class);
-                //intent.putExtra(selectedShow);
-                //startActivity(intent);
+                Intent intent = new Intent(getActivity(), CompleteInformationActivity.class);
+                intent.putExtra(CompleteInformationActivity.EXTRA_SHOW, selectedShow);
+                startActivity(intent);
             }
         });
     }
@@ -228,9 +237,8 @@ public class ShowsListFragment extends ListFragment {
     }
 
     private Show readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
+        Show show = new Show();
         parser.require(XmlPullParser.START_TAG, ns, SHOW);
-        String showName = "";
-        String channel = "";
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
@@ -240,25 +248,91 @@ public class ShowsListFragment extends ListFragment {
                 case NAME:
                     parser.require(XmlPullParser.START_TAG, ns, NAME);
                     if (parser.next() == XmlPullParser.TEXT) {
-                        showName = parser.getText();
+                        show.setName(parser.getText());
                         parser.nextTag();
                     }
                     parser.require(XmlPullParser.END_TAG, ns, NAME);
                     break;
+                case LINK:
+                    parser.require(XmlPullParser.START_TAG, ns, LINK);
+                    if (parser.next() == XmlPullParser.TEXT) {
+                        show.setURL(parser.getText());
+                        parser.nextTag();
+                    }
+                    parser.require(XmlPullParser.END_TAG, ns, LINK);
+                    break;
                 case CHANNEL:
                     parser.require(XmlPullParser.START_TAG, ns, CHANNEL);
                     if (parser.next() == XmlPullParser.TEXT) {
-                        channel = parser.getText();
+                        show.setChannel(parser.getText());
                         parser.nextTag();
                     }
                     parser.require(XmlPullParser.END_TAG, ns, CHANNEL);
                     break;
+                case STARTED:
+                    parser.require(XmlPullParser.START_TAG, ns, STARTED);
+                    if (parser.next() == XmlPullParser.TEXT) {
+                        show.setStartedDate(parser.getText());
+                        parser.nextTag();
+                    }
+                    parser.require(XmlPullParser.END_TAG, ns, STARTED);
+                    break;
+                case ENDED:
+                    parser.require(XmlPullParser.START_TAG, ns, ENDED);
+                    if (parser.next() == XmlPullParser.TEXT) {
+                        show.setEndedDate(parser.getText());
+                        parser.nextTag();
+                    }
+                    parser.require(XmlPullParser.END_TAG, ns, ENDED);
+                    break;
+                case SEASONS:
+                    parser.require(XmlPullParser.START_TAG, ns, SEASONS);
+                    if (parser.next() == XmlPullParser.TEXT) {
+                        show.setSeasons(Integer.valueOf(parser.getText()));
+                        parser.nextTag();
+                    }
+                    parser.require(XmlPullParser.END_TAG, ns, SEASONS);
+                    break;
+                case STATUS:
+                    parser.require(XmlPullParser.START_TAG, ns, STATUS);
+                    if (parser.next() == XmlPullParser.TEXT) {
+                        show.setStatus(parser.getText());
+                        parser.nextTag();
+                    }
+                    parser.require(XmlPullParser.END_TAG, ns, STATUS);
+                    break;
+                case RUNTIME:
+                    parser.require(XmlPullParser.START_TAG, ns, RUNTIME);
+                    if (parser.next() == XmlPullParser.TEXT) {
+                        show.setRuntime(Integer.valueOf(parser.getText()));
+                        parser.nextTag();
+                    }
+                    parser.require(XmlPullParser.END_TAG, ns, RUNTIME);
+                    break;
+                //TODO Case GENRE:
+                case AIRTIME:
+                    parser.require(XmlPullParser.START_TAG, ns, AIRTIME);
+                    if (parser.next() == XmlPullParser.TEXT) {
+                        show.setAirtime(parser.getText());
+                        parser.nextTag();
+                    }
+                    parser.require(XmlPullParser.END_TAG, ns, AIRTIME);
+                    break;
+                case AIRDAY:
+                    parser.require(XmlPullParser.START_TAG, ns, AIRDAY);
+                    if (parser.next() == XmlPullParser.TEXT) {
+                        show.setAirday(parser.getText());
+                        parser.nextTag();
+                    }
+                    parser.require(XmlPullParser.END_TAG, ns, AIRDAY);
+                    break;
+                //TODO Case aka
                 default:
                     skip(parser);
                     break;
             }
         }
-        return new Show(showName, channel);
+        return show;
     }
 
     private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {

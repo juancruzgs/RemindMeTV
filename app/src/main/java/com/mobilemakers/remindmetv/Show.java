@@ -1,32 +1,176 @@
 package com.mobilemakers.remindmetv;
 
-public class Show {
+import android.os.Parcel;
+import android.os.Parcelable;
 
-    private String name;
-    private String channel;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class Show  implements Parcelable {
+
+    //TODO Set all the members needed and change the constructor
+    private String mName;
+    private String mChannel;
+    private String mURL;
+    private String mStatus;
+    private List<String> mGenres;
+    private List<String> mAKA;
+    private String mStartedDate;
+    private String mEndedDate;
+    private int mSeasons;
+    private String mAirtime;
+    private String mAirday;
+    private int mRuntime;
+
 
     public Show() {
-    }
-
-    public Show(String name, String channel) {
-        this.name = name;
-        this.channel = channel;
+        mGenres = new ArrayList<>();
+        mAKA = new ArrayList<>();
     }
 
     public String getName() {
-        return name;
+        return mName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.mName = name;
     }
 
     public String getChannel() {
-        return channel;
+        return mChannel;
     }
 
     public void setChannel(String channel) {
-        this.channel = channel;
+        this.mChannel = channel;
     }
 
+    public String getURL() {
+        return mURL;
+    }
+
+    public void setURL(String URL) {
+        mURL = URL;
+    }
+
+    public String getStatus() {
+        return mStatus;
+    }
+
+    public void setStatus(String status) {
+        mStatus = status;
+    }
+
+    public List<String> getGenres() {
+        return mGenres;
+    }
+
+    public void setGenres(List<String> genres) {
+        mGenres = genres;
+    }
+
+    public List<String> getAKA() {
+        return mAKA;
+    }
+
+    public void setAKA(List<String> AKA) {
+        mAKA = AKA;
+    }
+
+    public String getStartedDate() {
+        return mStartedDate;
+    }
+
+    public void setStartedDate(String startedDate) {
+        mStartedDate = startedDate;
+    }
+
+    public String getEndedDate() {
+        return mEndedDate;
+    }
+
+    public void setEndedDate(String endedDate) {
+        mEndedDate = endedDate;
+    }
+
+    public int getSeasons() {
+        return mSeasons;
+    }
+
+    public void setSeasons(int seasons) {
+        mSeasons = seasons;
+    }
+
+    public String getAirtime() {
+        return mAirtime;
+    }
+
+    public void setAirtime(String airtime) {
+        mAirtime = airtime;
+    }
+
+    public String getAirday() {
+        return mAirday;
+    }
+
+    public void setAirday(String airday) {
+        mAirday = airday;
+    }
+
+    public int getRuntime() {
+        return mRuntime;
+    }
+
+    public void setRuntime(int runtime) {
+        mRuntime = runtime;
+    }
+
+    //PARCELABLE INTERFACE
+    public Show(Parcel parcel){
+        mName = parcel.readString();
+        mChannel = parcel.readString();
+        mURL = parcel.readString();
+        mStatus = parcel.readString();
+        mGenres = parcel.readArrayList(null);
+        mAKA = parcel.readArrayList(null);
+        mStartedDate = parcel.readString();
+        mEndedDate = parcel.readString();
+        mSeasons = parcel.readInt();
+        mAirtime = parcel.readString();
+        mAirday = parcel.readString();
+        mRuntime = parcel.readInt();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mName);
+        dest.writeString(mChannel);
+        dest.writeString(mURL);
+        dest.writeString(mStatus);
+        dest.writeList(mGenres);
+        dest.writeList(mAKA);
+        dest.writeString(mStartedDate);
+        dest.writeString(mEndedDate);
+        dest.writeInt(mSeasons);
+        dest.writeString(mAirtime);
+        dest.writeString(mAirday);
+        dest.writeInt(mRuntime);
+    }
+
+    public static final Creator<Show> CREATOR = new Creator<Show>() {
+        @Override
+        public Show createFromParcel(Parcel source) {
+            return new Show(source);
+        }
+
+        @Override
+        public Show[] newArray(int size) {
+            return new Show[size];
+        }
+    };
 }
