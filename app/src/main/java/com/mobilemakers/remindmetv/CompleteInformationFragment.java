@@ -19,6 +19,7 @@ import java.util.Calendar;
 public class CompleteInformationFragment extends Fragment {
 
     public static final String EXTRA_SHOW = "SHOW";
+    Show mShow;
     TextView mTextViewShowName;
     TextView mTextViewChannel;
     TextView mTextViewStatus;
@@ -76,7 +77,7 @@ public class CompleteInformationFragment extends Fragment {
                 intent.putExtra(CalendarContract.Events.RRULE, "FREQ=WEEKLY;BYDAY=TU,TH");
                 intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, calendar.getTimeInMillis()+60*60*1000);
                 intent.putExtra(CalendarContract.Reminders.TITLE, "");
-                intent.putExtra(CalendarContract.Events.TITLE, "A Test Event from android app");
+                intent.putExtra(CalendarContract.Events.TITLE, mShow.getName());
                 intent.putExtra(CalendarContract.Events.HAS_ALARM, 1);
                 //TODO Set timezone extra (read it from the API)
                 //intent.putExtra(CalendarContract.Reminders.TITLE, "A Test Event from android app");
@@ -95,17 +96,17 @@ public class CompleteInformationFragment extends Fragment {
 
     private void prepareTextViews() {
         if (getArguments().containsKey(EXTRA_SHOW)){
-            Show show = getArguments().getParcelable(EXTRA_SHOW);
-            mTextViewShowName.setText(show.getName());
-            mTextViewChannel.setText(show.getChannel());
-            mTextViewStatus.setText(show.getStatus());
-            mTextViewLink.setText(show.getURL());
-            mTextViewStarted.setText(show.getStartedDate());
-            mTextViewEnded.setText(show.getEndedDate());
-            mTextViewSeasons.setText(String.valueOf(show.getSeasons()));
-            mTextViewRuntime.setText(String.valueOf(show.getRuntime()));
-            mTextViewAirtime.setText(show.getAirtime());
-            mTextViewAirday.setText(show.getAirday());
+            mShow = getArguments().getParcelable(EXTRA_SHOW);
+            mTextViewShowName.setText(mShow.getName());
+            mTextViewChannel.setText(mShow.getChannel());
+            mTextViewStatus.setText(mShow.getStatus());
+            mTextViewLink.setText(mShow.getURL());
+            mTextViewStarted.setText(mShow.getStartedDate());
+            mTextViewEnded.setText(mShow.getEndedDate());
+            mTextViewSeasons.setText(String.valueOf(mShow.getSeasons()));
+            mTextViewRuntime.setText(String.valueOf(mShow.getRuntime()));
+            mTextViewAirtime.setText(mShow.getAirtime());
+            mTextViewAirday.setText(mShow.getAirday());
         }
     }
 }
