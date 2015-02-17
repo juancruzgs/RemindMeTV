@@ -235,6 +235,7 @@ public class ShowsListFragment extends ListFragment {
                 continue;
             }
             String name = parser.getName();
+            //TODO Read all the information needed for the next activity
             switch (name) {
                 case NAME:
                     parser.require(XmlPullParser.START_TAG, ns, NAME);

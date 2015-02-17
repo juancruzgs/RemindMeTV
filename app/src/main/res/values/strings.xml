@@ -11,5 +11,6 @@
     <string name="button_startscreen_search">Find</string>
     <string name="editText_startscreen_search_hint">Type your keywords here...</string>
     <string name="title_activity_complete_information">Complete Information</string>
+    <string name="button_add_to_calendar">Add to Calendar</string>
 
 </resources>
