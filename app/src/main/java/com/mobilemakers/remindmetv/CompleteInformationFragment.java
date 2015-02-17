@@ -21,6 +21,14 @@ public class CompleteInformationFragment extends Fragment {
     public static final String EXTRA_SHOW = "SHOW";
     TextView mTextViewShowName;
     TextView mTextViewChannel;
+    TextView mTextViewStatus;
+    TextView mTextViewLink;
+    TextView mTextViewStarted;
+    TextView mTextViewEnded;
+    TextView mTextViewSeasons;
+    TextView mTextViewRuntime;
+    TextView mTextViewAirtime;
+    TextView mTextViewAirday;
 
     public CompleteInformationFragment() {
     }
@@ -35,8 +43,16 @@ public class CompleteInformationFragment extends Fragment {
     }
 
     private void wireUpViews(View rootView) {
-        mTextViewShowName = (TextView)rootView.findViewById(R.id.text_view_show_name_complete_information);
-        mTextViewChannel = (TextView)rootView.findViewById(R.id.text_view_show_channel_complete_information);
+        mTextViewShowName = (TextView)rootView.findViewById(R.id.text_view_name_complete_information);
+        mTextViewChannel = (TextView)rootView.findViewById(R.id.text_view_channel_complete_information);
+        mTextViewStatus = (TextView)rootView.findViewById(R.id.text_view_status_complete_information);
+        mTextViewLink = (TextView)rootView.findViewById(R.id.text_view_link_complete_information);
+        mTextViewStarted = (TextView)rootView.findViewById(R.id.text_view_started_complete_information);
+        mTextViewEnded = (TextView)rootView.findViewById(R.id.text_view_ended_complete_information);
+        mTextViewSeasons = (TextView)rootView.findViewById(R.id.text_view_seasons_complete_information);
+        mTextViewRuntime = (TextView)rootView.findViewById(R.id.text_view_runtime_complete_information);
+        mTextViewAirtime = (TextView)rootView.findViewById(R.id.text_view_airtime_complete_information);
+        mTextViewAirday = (TextView)rootView.findViewById(R.id.text_view_airday_complete_information);
     }
 
     private void prepareButtonAddToCalendar(View rootView) {
@@ -82,6 +98,14 @@ public class CompleteInformationFragment extends Fragment {
             Show show = getArguments().getParcelable(EXTRA_SHOW);
             mTextViewShowName.setText(show.getName());
             mTextViewChannel.setText(show.getChannel());
+            mTextViewStatus.setText(show.getStatus());
+            mTextViewLink.setText(show.getURL());
+            mTextViewStarted.setText(show.getStartedDate());
+            mTextViewEnded.setText(show.getEndedDate());
+            mTextViewSeasons.setText(String.valueOf(show.getSeasons()));
+            mTextViewRuntime.setText(String.valueOf(show.getRuntime()));
+            mTextViewAirtime.setText(show.getAirtime());
+            mTextViewAirday.setText(show.getAirday());
         }
     }
 }
