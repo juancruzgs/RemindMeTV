@@ -10,21 +10,23 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center">
 
         <EditText
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:id="@+id/edit_text_search_list"
-            android:layout_weight="1"
-            android:hint="@string/edit_text_show_list_search_hint" />
+            android:hint="@string/edit_text_show_list_search_hint"
+            android:background="@drawable/rectangle_rounded_edit_texts"
+            android:layout_weight="1" />
 
         <ImageButton
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
             android:id="@+id/image_button_search"
-            android:src="@drawable/Searchmedium"
-            android:background="@drawable/rectangle_rounded"
+            android:src="@drawable/searchmedium"
+            android:background="@drawable/rectangle_rounded_imagebutton_with_edittext"
             android:contentDescription="@string/image_button_search_description"/>
 
     </LinearLayout>
@@ -32,5 +34,6 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@android:id/list" />
+        android:id="@android:id/list"
+        android:paddingTop="20dp"/>
 </LinearLayout>

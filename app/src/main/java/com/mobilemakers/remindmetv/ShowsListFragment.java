@@ -103,11 +103,11 @@ public class ShowsListFragment extends ListFragment {
             public void afterTextChanged(Editable s) {
                 if (!TextUtils.isEmpty(s.toString().trim())) {
                     mImageButtonSearch.setOnClickListener(clickListener);
-                    ((GradientDrawable)mImageButtonSearch.getBackground()).setColor(Color.GREEN);
+                    mImageButtonSearch.setBackground(getResources().getDrawable(R.drawable.rectangle_rounded_imagebutton_with_edittext_enabled));
                 }
                 else {
                     mImageButtonSearch.setOnClickListener(null);
-                    ((GradientDrawable)mImageButtonSearch.getBackground()).setColor(Color.RED);
+                    mImageButtonSearch.setBackground(getResources().getDrawable(R.drawable.rectangle_rounded_imagebutton_with_edittext));
                 }
             }
         });

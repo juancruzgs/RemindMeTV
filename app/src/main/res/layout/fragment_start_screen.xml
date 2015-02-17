@@ -50,6 +50,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/imageButton_startscreen_search"
         android:src="@drawable/search"
-        android:background="@drawable/rectangle_rounded"/>
+        android:background="@drawable/rectangle_rounded_imagebutton"/>
 
 </LinearLayout>
