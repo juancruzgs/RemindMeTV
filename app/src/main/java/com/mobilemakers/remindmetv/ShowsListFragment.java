@@ -10,7 +10,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +22,7 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -44,22 +38,6 @@ public class ShowsListFragment extends ListFragment {
     TransitionDrawable mTransitionImageButton;
     TransitionDrawable mTransitionEditText;
     CustomListener customListener = new CustomListener(true);
-
-    final String ns = null;
-    final String RESULTS = "Results";
-    final String SHOW = "show";
-    final String NAME = "name";
-    final String CHANNEL = "network";
-    final String LINK = "link";
-    final String STARTED = "started";
-    final String ENDED = "ended";
-    final String SEASONS = "seasons";
-    final String STATUS = "status";
-    final String RUNTIME = "runtime";
-    final String GENRES = "genres";
-    final String AIRTIME = "airtime";
-    final String AIRDAY = "airday";
-    final String AKAS = "akas";
 
     public ShowsListFragment() {
     }
@@ -83,6 +61,7 @@ public class ShowsListFragment extends ListFragment {
     private void setTextWatcher() {
         mEditShowName.addTextChangedListener(new TextWatcher() {
             Boolean check;
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 check = TextUtils.isEmpty(s.toString().trim());
@@ -95,7 +74,7 @@ public class ShowsListFragment extends ListFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length()==1 && check) {
+                if (s.length() == 1 && check) {
                     customListener.setEnabled(true);
                     mTransitionEditText.reverseTransition(1000);
                     mTransitionImageButton.reverseTransition(1000);
@@ -106,8 +85,8 @@ public class ShowsListFragment extends ListFragment {
                         mTransitionEditText.startTransition(1000);
                     }
                 }
-                mEditShowName.setPadding(30,0,0,0);
-                mImageButtonSearch.setPadding(20,0,30,0);
+                mEditShowName.setPadding(30, 0, 0, 0);
+                mImageButtonSearch.setPadding(20, 0, 30, 0);
             }
         });
     }
@@ -135,7 +114,7 @@ public class ShowsListFragment extends ListFragment {
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Show selectedShow = (Show) mAdapter.getItem(position);
+                Show selectedShow = mAdapter.getItem(position);
                 Intent intent = new Intent(getActivity(), CompleteInformationActivity.class);
                 intent.putExtra(CompleteInformationActivity.EXTRA_SHOW, selectedShow);
                 startActivity(intent);
@@ -167,7 +146,7 @@ public class ShowsListFragment extends ListFragment {
                 @Override
                 public void onResponse(Response response) throws IOException {
                     String responseString = response.body().string();
-                    final List<Show> listOfShows = parseResponse(responseString);
+                    final List<Show> listOfShows = ShowParser.parseResponse(responseString);
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -203,159 +182,6 @@ public class ShowsListFragment extends ListFragment {
 
         return new URL(uri.toString());
 
-    }
-
-    private List<Show> parseResponse(String response) {
-
-        List<Show> shows = new ArrayList<>();
-        try {
-            InputStream is = new ByteArrayInputStream(response.getBytes("UTF-8"));
-            XmlPullParser parser = Xml.newPullParser();
-            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(is, null);
-            parser.nextTag();
-            shows = readShows(parser);
-            //TODO In finally
-            is.close();
-        } catch (XmlPullParserException | IOException e) {
-            e.printStackTrace();
-        }
-
-        return shows;
-    }
-
-    private List<Show> readShows(XmlPullParser parser) throws XmlPullParserException, IOException {
-        List<Show> entries = new ArrayList<>();
-
-        parser.require(XmlPullParser.START_TAG, ns, RESULTS);
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
-            String name = parser.getName();
-            if (name.equals(SHOW)) {
-                entries.add(readEntry(parser));
-            } else {
-                skip(parser);
-            }
-        }
-        return entries;
-    }
-
-    private Show readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
-        Show show = new Show();
-        parser.require(XmlPullParser.START_TAG, ns, SHOW);
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
-            String name = parser.getName();
-            switch (name) {
-                case NAME:
-                    parser.require(XmlPullParser.START_TAG, ns, NAME);
-                    if (parser.next() == XmlPullParser.TEXT) {
-                        show.setName(parser.getText());
-                        parser.nextTag();
-                    }
-                    parser.require(XmlPullParser.END_TAG, ns, NAME);
-                    break;
-                case LINK:
-                    parser.require(XmlPullParser.START_TAG, ns, LINK);
-                    if (parser.next() == XmlPullParser.TEXT) {
-                        show.setURL(parser.getText());
-                        parser.nextTag();
-                    }
-                    parser.require(XmlPullParser.END_TAG, ns, LINK);
-                    break;
-                case CHANNEL:
-                    parser.require(XmlPullParser.START_TAG, ns, CHANNEL);
-                    if (parser.next() == XmlPullParser.TEXT) {
-                        show.setChannel(parser.getText());
-                        parser.nextTag();
-                    }
-                    parser.require(XmlPullParser.END_TAG, ns, CHANNEL);
-                    break;
-                case STARTED:
-                    parser.require(XmlPullParser.START_TAG, ns, STARTED);
-                    if (parser.next() == XmlPullParser.TEXT) {
-                        show.setStartedDate(parser.getText());
-                        parser.nextTag();
-                    }
-                    parser.require(XmlPullParser.END_TAG, ns, STARTED);
-                    break;
-                case ENDED:
-                    parser.require(XmlPullParser.START_TAG, ns, ENDED);
-                    if (parser.next() == XmlPullParser.TEXT) {
-                        show.setEndedDate(parser.getText());
-                        parser.nextTag();
-                    }
-                    parser.require(XmlPullParser.END_TAG, ns, ENDED);
-                    break;
-                case SEASONS:
-                    parser.require(XmlPullParser.START_TAG, ns, SEASONS);
-                    if (parser.next() == XmlPullParser.TEXT) {
-                        show.setSeasons(Integer.valueOf(parser.getText()));
-                        parser.nextTag();
-                    }
-                    parser.require(XmlPullParser.END_TAG, ns, SEASONS);
-                    break;
-                case STATUS:
-                    parser.require(XmlPullParser.START_TAG, ns, STATUS);
-                    if (parser.next() == XmlPullParser.TEXT) {
-                        show.setStatus(parser.getText());
-                        parser.nextTag();
-                    }
-                    parser.require(XmlPullParser.END_TAG, ns, STATUS);
-                    break;
-                case RUNTIME:
-                    parser.require(XmlPullParser.START_TAG, ns, RUNTIME);
-                    if (parser.next() == XmlPullParser.TEXT) {
-                        show.setRuntime(Integer.valueOf(parser.getText()));
-                        parser.nextTag();
-                    }
-                    parser.require(XmlPullParser.END_TAG, ns, RUNTIME);
-                    break;
-                //TODO Case GENRE:
-                case AIRTIME:
-                    parser.require(XmlPullParser.START_TAG, ns, AIRTIME);
-                    if (parser.next() == XmlPullParser.TEXT) {
-                        show.setAirtime(parser.getText());
-                        parser.nextTag();
-                    }
-                    parser.require(XmlPullParser.END_TAG, ns, AIRTIME);
-                    break;
-                case AIRDAY:
-                    parser.require(XmlPullParser.START_TAG, ns, AIRDAY);
-                    if (parser.next() == XmlPullParser.TEXT) {
-                        show.setAirday(parser.getText());
-                        parser.nextTag();
-                    }
-                    parser.require(XmlPullParser.END_TAG, ns, AIRDAY);
-                    break;
-                //TODO Case aka
-                default:
-                    skip(parser);
-                    break;
-            }
-        }
-        return show;
-    }
-
-    private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
-        if (parser.getEventType() != XmlPullParser.START_TAG) {
-            throw new IllegalStateException();
-        }
-        int depth = 1;
-        while (depth != 0) {
-            switch (parser.next()) {
-                case XmlPullParser.END_TAG:
-                    depth--;
-                    break;
-                case XmlPullParser.START_TAG:
-                    depth++;
-                    break;
-            }
-        }
     }
 
     private class CustomListener implements View.OnClickListener{

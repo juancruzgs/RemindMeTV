@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Show  implements Parcelable {
@@ -14,7 +13,6 @@ public class Show  implements Parcelable {
     private String mURL;
     private String mStatus;
     private List<String> mGenres;
-    private List<String> mAKA;
     private String mStartedDate;
     private String mEndedDate;
     private int mSeasons;
@@ -25,7 +23,6 @@ public class Show  implements Parcelable {
 
     public Show() {
         mGenres = new ArrayList<>();
-        mAKA = new ArrayList<>();
     }
 
     public String getName() {
@@ -66,14 +63,6 @@ public class Show  implements Parcelable {
 
     public void setGenres(List<String> genres) {
         mGenres = genres;
-    }
-
-    public List<String> getAKA() {
-        return mAKA;
-    }
-
-    public void setAKA(List<String> AKA) {
-        mAKA = AKA;
     }
 
     public String getStartedDate() {
@@ -131,7 +120,6 @@ public class Show  implements Parcelable {
         mURL = parcel.readString();
         mStatus = parcel.readString();
         mGenres = parcel.readArrayList(null);
-        mAKA = parcel.readArrayList(null);
         mStartedDate = parcel.readString();
         mEndedDate = parcel.readString();
         mSeasons = parcel.readInt();
@@ -152,7 +140,6 @@ public class Show  implements Parcelable {
         dest.writeString(mURL);
         dest.writeString(mStatus);
         dest.writeList(mGenres);
-        dest.writeList(mAKA);
         dest.writeString(mStartedDate);
         dest.writeString(mEndedDate);
         dest.writeInt(mSeasons);
