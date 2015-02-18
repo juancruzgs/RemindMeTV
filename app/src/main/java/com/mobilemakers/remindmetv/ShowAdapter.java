@@ -41,6 +41,11 @@ public class ShowAdapter extends ArrayAdapter<Show>{
 
     private void displayShowInRow(int position, View rowView) {
         if (rowView != null){
+            if (position%2 == 0) {
+                rowView.setBackgroundColor(mContext.getResources().getColor(R.color.primary_light127));
+            }else {
+                rowView.setBackgroundColor(mContext.getResources().getColor(R.color.primary_light192));
+            }
             TextView textViewName = (TextView)rowView.findViewById(R.id.text_view_show_name);
             TextView textViewChannel = (TextView)rowView.findViewById(R.id.text_view_show_channel);
 
