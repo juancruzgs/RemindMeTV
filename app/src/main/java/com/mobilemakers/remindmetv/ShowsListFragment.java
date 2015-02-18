@@ -147,6 +147,7 @@ public class ShowsListFragment extends ListFragment {
         if (getArguments().containsKey(EXTRA_SEARCH)) {
             String searchName = getArguments().getString(EXTRA_SEARCH);
             mEditShowName.setText(searchName);
+            mEditShowName.setSelection(mEditShowName.getText().length());
             fetchShowsInQueue(searchName);
         }
     }
