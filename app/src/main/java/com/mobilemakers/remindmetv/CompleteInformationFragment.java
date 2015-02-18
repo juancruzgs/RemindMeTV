@@ -1,6 +1,7 @@
 package com.mobilemakers.remindmetv;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -106,28 +107,37 @@ public class CompleteInformationFragment extends Fragment {
 
             final String[] EVENT_PROJECTION = new String[]{
                     CalendarContract.Events._ID,
-                    CalendarContract.Events.DTSTART,
-                    CalendarContract.Events.DURATION,
             };
 
-            Cursor cur;
+            Cursor cursorEvents;
             ContentResolver cr = getActivity().getContentResolver();
-            Uri uri = CalendarContract.Events.CONTENT_URI;
-            //Filter for BEGIN_TIME and DURATION
-            String selection = "((" + CalendarContract.Events.DTSTART  + " = " + mTimeStart +") AND " +
+            Uri eventsUri = CalendarContract.Events.CONTENT_URI;
+            //Filter by BEGIN_TIME and DURATION
+            String eventSelection = "((" + CalendarContract.Events.DTSTART  + " = " + mTimeStart +") AND " +
                                 "(" + CalendarContract.Events.DURATION + " = 'P3600S'))";
-            cur = cr.query(uri, EVENT_PROJECTION, selection, null, null);
+            cursorEvents = cr.query(eventsUri, EVENT_PROJECTION, eventSelection, null, null);
 
-            while (cur.moveToNext()) {
-                String eventID;
-                Long event_start;
-                String event_duration;
+            if (cursorEvents.moveToNext()) {
+                Integer eventID =  cursorEvents.getInt(0);
 
-                eventID = cur.getString(0);
-                event_start = cur.getLong(1);
-                event_duration = cur.getString(2);
+                final String[] REMINDER_PROJECTION = new String[]{
+                        CalendarContract.Reminders._ID
+                };
 
-                Log.d("LOG", eventID + " - " + String.valueOf(event_start) + " - "+event_duration);
+                Cursor cursorReminders;
+                Uri remindersUri = CalendarContract.Reminders.CONTENT_URI;
+                //Filter by EVENT_ID
+                String reminderSelection = "(" + CalendarContract.Reminders.EVENT_ID  + " = " + eventID +")";
+                cursorReminders = cr.query(remindersUri, REMINDER_PROJECTION, reminderSelection, null , null);
+
+                //Event without reminders
+                if (!cursorReminders.moveToNext()) {
+                    ContentValues values = new ContentValues();
+                    values.put(CalendarContract.Reminders.MINUTES, 15);
+                    values.put(CalendarContract.Reminders.EVENT_ID, eventID);
+                    values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+                    Uri rowUri = cr.insert(remindersUri, values);
+                }
             }
         }
     }
