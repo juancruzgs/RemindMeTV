@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,11 @@ import java.util.Calendar;
 public class CompleteInformationFragment extends Fragment {
 
     public static final String EXTRA_SHOW = "SHOW";
+    private static final String EVENT_DESCRIPTION = "RemindMeTV Event";
+    private static final String EVENT_RRULE = "FREQ=WEEKLY;COUNT=50";
+    private static final int REQUEST_CODE = 2;
+    private static final int REMINDER_MINUTES = 15;
+
     Show mShow;
     TextView mTextViewShowName;
     TextView mTextViewChannel;
@@ -36,7 +40,9 @@ public class CompleteInformationFragment extends Fragment {
     TextView mTextViewAirtime;
     TextView mTextViewAirday;
 
-    Long mTimeStart;
+    Long mStartTime;
+    int mHour;
+    int mMinutes;
 
     public CompleteInformationFragment() {
     }
@@ -72,28 +78,63 @@ public class CompleteInformationFragment extends Fragment {
             }
 
             private void startCalendarIntentWithExtras() {
+
+                int day = parseAirdayFromShow();
+                parseHourAndMinutesFromShow();
+
                 Calendar beginTime = Calendar.getInstance();
-                beginTime.set(2015, Calendar.FEBRUARY, 17, 22, 30, 0);
+                while( beginTime.get( Calendar.DAY_OF_WEEK ) != day)
+                    beginTime.add( Calendar.DATE, 1 );
+
+                beginTime.set(Calendar.HOUR_OF_DAY, mHour);
+                beginTime.set(Calendar.MINUTE, mMinutes);
+                beginTime.set(Calendar.SECOND, 0);
                 beginTime.set(Calendar.MILLISECOND, 0);
-                mTimeStart = beginTime.getTimeInMillis();
-                Calendar endTime = Calendar.getInstance();
-                endTime.set(2015, Calendar.FEBRUARY, 17, 23, 30, 0);
-                endTime.set(Calendar.MILLISECOND, 0);
+                mStartTime = beginTime.getTimeInMillis();
+
+                Calendar endTime = (Calendar)beginTime.clone();
+                endTime.add(Calendar.MINUTE, mShow.getRuntime());
 
                 Intent intent = new Intent(Intent.ACTION_EDIT);
                 intent.setData(CalendarContract.Events.CONTENT_URI);
                 intent.putExtra(CalendarContract.Events.TITLE, mShow.getName());
-                intent.putExtra(CalendarContract.Events.DESCRIPTION, "RemindMeTV Event");
+                intent.putExtra(CalendarContract.Events.DESCRIPTION, EVENT_DESCRIPTION);
                 intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis());
                 intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis());
                 intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
-                intent.putExtra(CalendarContract.Events.RRULE, "FREQ=WEEKLY;COUNT=50");
-                //TODO Set timezone extra (read it from the API)
-                //TODO Get Event ID
-//                intent.putExtra(CalendarContract.Reminders.TITLE, "A Test Event from android app");
-//                intent.putExtra(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
-//                intent.putExtra(CalendarContract.Reminders.MINUTES, 20);
-                startActivityForResult(intent, 2);
+                intent.putExtra(CalendarContract.Events.RRULE, EVENT_RRULE);
+
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+
+            private int parseAirdayFromShow() {
+                int day;
+                switch (mShow.getAirday()){
+                    case "Monday": day = Calendar.MONDAY;
+                        break;
+                    case "Tuesday": day = Calendar.TUESDAY;
+                        break;
+                    case "Wednesday": day = Calendar.WEDNESDAY;
+                        break;
+                    case "Thursday": day = Calendar.THURSDAY;
+                        break;
+                    case "Friday": day = Calendar.FRIDAY;
+                        break;
+                    case "Saturday": day = Calendar.SATURDAY;
+                        break;
+                    case "Sunday": day = Calendar.SUNDAY;
+                        break;
+                    default: day = Calendar.MONDAY;
+                        break;
+                }
+                return day;
+            }
+
+            private void parseHourAndMinutesFromShow() {
+                String hourAndMinutes = mShow.getAirtime();
+                int colonIndex = hourAndMinutes.indexOf(":");
+                mHour = Integer.valueOf(hourAndMinutes.substring(0,colonIndex));
+                mMinutes = Integer.valueOf(hourAndMinutes.substring(colonIndex+1, hourAndMinutes.length()));
             }
         });
     }
@@ -103,7 +144,9 @@ public class CompleteInformationFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         //resultCode always is 0
-        if (requestCode == 2) {
+        if (requestCode == REQUEST_CODE) {
+
+            String duration = "P" + String.valueOf(mShow.getRuntime()*60) +"S";
 
             final String[] EVENT_PROJECTION = new String[]{
                     CalendarContract.Events._ID,
@@ -113,8 +156,8 @@ public class CompleteInformationFragment extends Fragment {
             ContentResolver cr = getActivity().getContentResolver();
             Uri eventsUri = CalendarContract.Events.CONTENT_URI;
             //Filter by BEGIN_TIME and DURATION
-            String eventSelection = "((" + CalendarContract.Events.DTSTART  + " = " + mTimeStart +") AND " +
-                                "(" + CalendarContract.Events.DURATION + " = 'P3600S'))";
+            String eventSelection = "((" + CalendarContract.Events.DTSTART  + " = " + mStartTime + ") AND " +
+                                "(" + CalendarContract.Events.DURATION + " = '" + duration + "'))";
             cursorEvents = cr.query(eventsUri, EVENT_PROJECTION, eventSelection, null, null);
 
             if (cursorEvents.moveToNext()) {
@@ -133,7 +176,7 @@ public class CompleteInformationFragment extends Fragment {
                 //Event without reminders
                 if (!cursorReminders.moveToNext()) {
                     ContentValues values = new ContentValues();
-                    values.put(CalendarContract.Reminders.MINUTES, 15);
+                    values.put(CalendarContract.Reminders.MINUTES, REMINDER_MINUTES);
                     values.put(CalendarContract.Reminders.EVENT_ID, eventID);
                     values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
                     Uri rowUri = cr.insert(remindersUri, values);

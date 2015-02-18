@@ -9,7 +9,6 @@ import java.util.List;
 
 public class Show  implements Parcelable {
 
-    //TODO Set all the members needed and change the constructor
     private String mName;
     private String mChannel;
     private String mURL;
