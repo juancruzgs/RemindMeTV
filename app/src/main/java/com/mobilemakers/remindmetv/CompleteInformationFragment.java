@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -36,8 +35,7 @@ public class CompleteInformationFragment extends Fragment {
     TextView mTextViewAirtime;
     TextView mTextViewAirday;
 
-    Long mTimeA;
-    Long mTimeB;
+    Long mTimeStart;
 
     public CompleteInformationFragment() {
     }
@@ -76,7 +74,7 @@ public class CompleteInformationFragment extends Fragment {
                 Calendar beginTime = Calendar.getInstance();
                 beginTime.set(2015, Calendar.FEBRUARY, 17, 22, 30, 0);
                 beginTime.set(Calendar.MILLISECOND, 0);
-                mTimeA = beginTime.getTimeInMillis();
+                mTimeStart = beginTime.getTimeInMillis();
                 Calendar endTime = Calendar.getInstance();
                 endTime.set(2015, Calendar.FEBRUARY, 17, 23, 30, 0);
                 endTime.set(Calendar.MILLISECOND, 0);
@@ -102,6 +100,8 @@ public class CompleteInformationFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        //resultCode always is 0
         if (requestCode == 2) {
 
             final String[] EVENT_PROJECTION = new String[]{
@@ -113,7 +113,8 @@ public class CompleteInformationFragment extends Fragment {
             Cursor cur;
             ContentResolver cr = getActivity().getContentResolver();
             Uri uri = CalendarContract.Events.CONTENT_URI;
-            String selection = "((" + CalendarContract.Events.DTSTART  + " = " + mTimeA +") AND " +
+            //Filter for BEGIN_TIME and DURATION
+            String selection = "((" + CalendarContract.Events.DTSTART  + " = " + mTimeStart +") AND " +
                                 "(" + CalendarContract.Events.DURATION + " = 'P3600S'))";
             cur = cr.query(uri, EVENT_PROJECTION, selection, null, null);
 
@@ -127,7 +128,6 @@ public class CompleteInformationFragment extends Fragment {
                 event_duration = cur.getString(2);
 
                 Log.d("LOG", eventID + " - " + String.valueOf(event_start) + " - "+event_duration);
-
             }
         }
     }
