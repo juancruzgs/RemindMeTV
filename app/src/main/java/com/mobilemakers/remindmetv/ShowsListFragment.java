@@ -107,7 +107,7 @@ public class ShowsListFragment extends ListFragment {
                     }
                 }
                 mEditShowName.setPadding(30,0,0,0);
-                mImageButtonSearch.setPadding(0,0,30,0);
+                mImageButtonSearch.setPadding(20,0,30,0);
             }
         });
     }
