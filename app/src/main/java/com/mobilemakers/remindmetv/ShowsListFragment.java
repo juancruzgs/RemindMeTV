@@ -1,8 +1,7 @@
 package com.mobilemakers.remindmetv;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -35,9 +34,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class ShowsListFragment extends ListFragment {
 
     public static final String EXTRA_SEARCH = "extra_search";
@@ -45,6 +41,9 @@ public class ShowsListFragment extends ListFragment {
     ShowAdapter mAdapter;
     EditText mEditShowName;
     ImageButton mImageButtonSearch;
+    TransitionDrawable mTransitionImageButton;
+    TransitionDrawable mTransitionEditText;
+    CustomListener customListener = new CustomListener(true);
 
     final String ns = null;
     final String RESULTS = "Results";
@@ -70,31 +69,23 @@ public class ShowsListFragment extends ListFragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_shows_list, container, false);
         wireUpViews(rootView);
-        View.OnClickListener clickListener = setClickListener();
-        prepareEditText(clickListener);
+        wireupTransitions();
+        setClickListener();
+        setTextWatcher();
         return rootView;
     }
 
-    private void wireUpViews(View rootView) {
-        mEditShowName = (EditText) rootView.findViewById(R.id.edit_text_search_list);
-        mImageButtonSearch = (ImageButton)rootView.findViewById(R.id.image_button_search);
+    private void wireupTransitions() {
+        mTransitionEditText = (TransitionDrawable) mEditShowName.getBackground();
+        mTransitionImageButton = (TransitionDrawable) mImageButtonSearch.getBackground();
     }
 
-    private View.OnClickListener setClickListener() {
-        return new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String showName = mEditShowName.getText().toString();
-                    fetchShowsInQueue(showName);
-                }
-            };
-    }
-
-    private void prepareEditText(final View.OnClickListener clickListener) {
+    private void setTextWatcher() {
         mEditShowName.addTextChangedListener(new TextWatcher() {
+            Boolean check;
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                check = TextUtils.isEmpty(s.toString().trim());
             }
 
             @Override
@@ -104,16 +95,30 @@ public class ShowsListFragment extends ListFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!TextUtils.isEmpty(s.toString().trim())) {
-                    mImageButtonSearch.setOnClickListener(clickListener);
-                    ((GradientDrawable)mImageButtonSearch.getBackground()).setColor(Color.GREEN);
+                if (s.length()==1 && check) {
+                    customListener.setEnabled(true);
+                    mTransitionEditText.reverseTransition(1000);
+                    mTransitionImageButton.reverseTransition(1000);
+                } else {
+                    if (TextUtils.isEmpty(s.toString().trim())) {
+                        customListener.setEnabled(false);
+                        mTransitionImageButton.startTransition(1000);
+                        mTransitionEditText.startTransition(1000);
+                    }
                 }
-                else {
-                    mImageButtonSearch.setOnClickListener(null);
-                    ((GradientDrawable)mImageButtonSearch.getBackground()).setColor(Color.RED);
-                }
+                mEditShowName.setPadding(30,0,0,0);
+                mImageButtonSearch.setPadding(20,0,30,0);
             }
         });
+    }
+
+    private void wireUpViews(View rootView) {
+        mEditShowName = (EditText) rootView.findViewById(R.id.edit_text_search_list);
+        mImageButtonSearch = (ImageButton) rootView.findViewById(R.id.image_button_search);
+    }
+
+    private void setClickListener() {
+        mImageButtonSearch.setOnClickListener(customListener);
     }
 
     @Override
@@ -139,9 +144,10 @@ public class ShowsListFragment extends ListFragment {
     }
 
     private void searchForInitialCall() {
-        if (getArguments().containsKey(EXTRA_SEARCH)){
+        if (getArguments().containsKey(EXTRA_SEARCH)) {
             String searchName = getArguments().getString(EXTRA_SEARCH);
             mEditShowName.setText(searchName);
+            mEditShowName.setSelection(mEditShowName.getText().length());
             fetchShowsInQueue(searchName);
         }
     }
@@ -199,7 +205,7 @@ public class ShowsListFragment extends ListFragment {
 
     }
 
-    private List<Show> parseResponse(String response){
+    private List<Show> parseResponse(String response) {
 
         List<Show> shows = new ArrayList<>();
         try {
@@ -348,6 +354,27 @@ public class ShowsListFragment extends ListFragment {
                 case XmlPullParser.START_TAG:
                     depth++;
                     break;
+            }
+        }
+    }
+
+    private class CustomListener implements View.OnClickListener{
+
+        private Boolean isEnabled;
+
+        public void setEnabled(Boolean isEnabled) {
+            this.isEnabled = isEnabled;
+        }
+
+        private CustomListener(Boolean isEnabled) {
+            this.isEnabled = isEnabled;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (isEnabled) {
+                String showName = mEditShowName.getText().toString();
+                fetchShowsInQueue(showName);
             }
         }
     }
