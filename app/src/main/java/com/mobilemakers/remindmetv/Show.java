@@ -8,17 +8,17 @@ import java.util.List;
 
 public class Show  implements Parcelable {
 
-    private String mName;
-    private String mChannel;
-    private String mURL;
-    private String mStatus;
+    private String mName = "";
+    private String mChannel = "";
+    private String mURL = "";
+    private String mStatus = "";
     private List<String> mGenres;
-    private String mStartedDate;
-    private String mEndedDate;
-    private int mSeasons;
-    private String mAirtime;
-    private String mAirday;
-    private int mRuntime;
+    private String mStartedDate = "";
+    private String mEndedDate = "";
+    private int mSeasons = 0;
+    private String mAirtime = "";
+    private String mAirday = "";
+    private int mRuntime = 0;
 
 
     public Show() {

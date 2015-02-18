@@ -23,10 +23,7 @@ import java.util.Calendar;
 public class CompleteInformationFragment extends Fragment {
 
     public static final String EXTRA_SHOW = "SHOW";
-    private static final String EVENT_DESCRIPTION = "RemindMeTV Event";
-    private static final String EVENT_RRULE = "FREQ=WEEKLY;COUNT=50";
     private static final int REQUEST_CODE = 2;
-    private static final int REMINDER_MINUTES = 15;
 
     Show mShow;
     TextView mTextViewShowName;
@@ -78,6 +75,8 @@ public class CompleteInformationFragment extends Fragment {
             }
 
             private void startCalendarIntentWithExtras() {
+                final String EVENT_DESCRIPTION = "RemindMeTV Event";
+                final String EVENT_RRULE = "FREQ=WEEKLY;COUNT=50";
 
                 int day = parseAirdayFromShow();
                 parseHourAndMinutesFromShow();
@@ -108,21 +107,29 @@ public class CompleteInformationFragment extends Fragment {
             }
 
             private int parseAirdayFromShow() {
+                final String MONDAY = "monday";
+                final String TUESDAY = "tuesday";
+                final String WEDNESDAY = "wednesday";
+                final String THURSDAY = "thursday";
+                final String FRIDAY = "friday";
+                final String SATURDAY = "saturday";
+                final String SUNDAY = "sunday";
+
                 int day;
-                switch (mShow.getAirday()){
-                    case "Monday": day = Calendar.MONDAY;
+                switch (mShow.getAirday().toLowerCase().trim()){
+                    case MONDAY: day = Calendar.MONDAY;
                         break;
-                    case "Tuesday": day = Calendar.TUESDAY;
+                    case TUESDAY: day = Calendar.TUESDAY;
                         break;
-                    case "Wednesday": day = Calendar.WEDNESDAY;
+                    case WEDNESDAY: day = Calendar.WEDNESDAY;
                         break;
-                    case "Thursday": day = Calendar.THURSDAY;
+                    case THURSDAY: day = Calendar.THURSDAY;
                         break;
-                    case "Friday": day = Calendar.FRIDAY;
+                    case FRIDAY: day = Calendar.FRIDAY;
                         break;
-                    case "Saturday": day = Calendar.SATURDAY;
+                    case SATURDAY: day = Calendar.SATURDAY;
                         break;
-                    case "Sunday": day = Calendar.SUNDAY;
+                    case SUNDAY: day = Calendar.SUNDAY;
                         break;
                     default: day = Calendar.MONDAY;
                         break;
@@ -145,6 +152,7 @@ public class CompleteInformationFragment extends Fragment {
 
         //resultCode always is 0
         if (requestCode == REQUEST_CODE) {
+            final int REMINDER_MINUTES = 15;
 
             String duration = "P" + String.valueOf(mShow.getRuntime()*60) +"S";
 
