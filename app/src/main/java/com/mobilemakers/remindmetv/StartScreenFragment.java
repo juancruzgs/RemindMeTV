@@ -15,13 +15,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ScrollView;
+import android.widget.Toast;
 
 public class StartScreenFragment extends Fragment {
 
     ImageButton mImageButtonSearch;
     EditText mEditTextSearch;
     TransitionDrawable mTransitionImageButton;
-    CustomListener customListener = new CustomListener(true);
+    TransitionDrawable mTransitionEditText;
+    CustomListener customListener = new CustomListener(false);
 
     public StartScreenFragment() {
     }
@@ -38,7 +41,9 @@ public class StartScreenFragment extends Fragment {
 
     private void wireupTransitions() {
         mTransitionImageButton = (TransitionDrawable) mImageButtonSearch.getBackground();
-        mImageButtonSearch.setPadding(30,30,30,30);
+        mTransitionEditText = (TransitionDrawable) mEditTextSearch.getBackground();
+        mImageButtonSearch.setPadding(20,0,30,0);
+        mEditTextSearch.setPadding(30,0,0,0);
     }
 
     private void setupListenersAndWatchers() {
@@ -60,10 +65,12 @@ public class StartScreenFragment extends Fragment {
                 if (s.length()==1 && check) {
                     customListener.setEnabled(true);
                     mTransitionImageButton.startTransition(700);
+                    mTransitionEditText.startTransition(700);
                 } else {
                     if (TextUtils.isEmpty(s.toString().trim())){
                         customListener.setEnabled(false);
                         mTransitionImageButton.reverseTransition(700);
+                        mTransitionEditText.reverseTransition(700);
                     }
                 }
             }

@@ -1,61 +1,77 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity$PlaceholderFragment"
     android:gravity="center"
-    android:orientation="vertical">
+    android:id="@+id/scrollView_mains_screen"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView_start_screen"
-        android:src="@drawable/remindmetvmedium" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/textView_welcome_message"
-        android:id="@+id/textView_startscreen_welcome_message"
-        android:gravity="center" />
-
-    <Space
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="10dp" />
-
-    <TextView
-        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/textView_startscreen_tip"
-        android:id="@+id/textView2"
-        android:gravity="center" />
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context=".MainActivity$PlaceholderFragment">
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="30dp" />
+        <ImageView
+            android:id="@+id/imageView_start_screen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/remindmetvmedium" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="@string/editText_startscreen_search_hint"
-        android:id="@+id/editText_startscreen_search"
-        android:gravity="center" />
+        <TextView
+            android:id="@+id/textView_startscreen_welcome_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/textView_welcome_message"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="15dp" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageButton_startscreen_search"
-        android:src="@drawable/search"
-        android:background="@drawable/transition_main_screen_imagebutton"/>
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/textView_startscreen_tip"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
-</LinearLayout>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:id="@+id/editText_startscreen_search"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:gravity="center"
+                android:hint="@string/editText_startscreen_search_hint"
+                android:background="@drawable/transition_edittext_main_screen" />
+
+            <ImageButton
+                android:id="@+id/imageButton_startscreen_search"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:background="@drawable/transition_imagebutton_main_screen"
+                android:src="@drawable/searchmedium" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="15dp" />
+
+    </LinearLayout>
+</ScrollView>
