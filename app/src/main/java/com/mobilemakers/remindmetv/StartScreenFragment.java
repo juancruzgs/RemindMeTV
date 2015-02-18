@@ -64,17 +64,25 @@ public class StartScreenFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 if (s.length()==1 && check) {
                     customListener.setEnabled(true);
-                    mTransitionImageButton.startTransition(700);
-                    mTransitionEditText.startTransition(700);
+                    startTransitions();
                 } else {
                     if (TextUtils.isEmpty(s.toString().trim())){
                         customListener.setEnabled(false);
-                        mTransitionImageButton.reverseTransition(700);
-                        mTransitionEditText.reverseTransition(700);
+                        reverseTransitions();
                     }
                 }
             }
         });
+    }
+
+    private void reverseTransitions() {
+        mTransitionImageButton.reverseTransition(700);
+        mTransitionEditText.reverseTransition(700);
+    }
+
+    private void startTransitions() {
+        mTransitionImageButton.startTransition(700);
+        mTransitionEditText.startTransition(700);
     }
 
     private void wireUpViews(View rootView) {
@@ -99,8 +107,15 @@ public class StartScreenFragment extends Fragment {
             if (isEnabled) {
                 Intent searchIntent = new Intent(getActivity(), ShowsListActivity.class);
                 searchIntent.putExtra(ShowsListActivity.EXTRA_SEARCH , mEditTextSearch.getText().toString());
+                mEditTextSearch.setText("");
+                reseetTransitions();
                 startActivity(searchIntent);
             }
         }
+    }
+
+    private void reseetTransitions() {
+        mTransitionEditText.resetTransition();
+        mTransitionImageButton.resetTransition();
     }
 }
