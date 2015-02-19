@@ -11,7 +11,18 @@
     <string name="button_startscreen_search">Find</string>
     <string name="editText_startscreen_search_hint">Type your keywords here...</string>
     <string name="title_activity_complete_information">Complete Information</string>
-    <string name="button_add_to_calendar">Add to Calendar</string>
+    <string name="button_add_to_calendar">Add reminder!</string>
     <string name="image_button_search_description">Search!</string>
+    <string name="info_channel">Channel: %s</string>
+    <string name="info_status">Status: %s</string>
+    <string name="info_started_date">Started: %s</string>
+    <string name="info_ended_date">Ended: %s</string>
+    <string name="info_seasons">Seasons: %s</string>
+    <string name="info_runtime">Runtime: %s</string>
+    <string name="info_airtime">Air time: %s</string>
+    <string name="info_airday">Air day: %s</string>
+    <string name="textView_watch">Air info</string>
+    <string name="textView_info">Info</string>
+    <string name="action_events_list">Events List</string>
 
 </resources>

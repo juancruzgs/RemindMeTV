@@ -12,6 +12,9 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -45,6 +48,12 @@ public class ShowsListFragment extends ListFragment {
     CustomListener customListener = new CustomListener(true);
 
     public ShowsListFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -189,6 +198,35 @@ public class ShowsListFragment extends ListFragment {
         Log.d(LOG_TAG, "Built URI: " + uri.toString());
 
         return new URL(uri.toString());
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_shows_list_fragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int menuId = item.getItemId();
+        Boolean handled = false;
+
+        switch(menuId){
+            case R.id.action_events_list:
+                startEventsListFragment();
+                handled = true;
+                break;
+        }
+
+        if (!handled) {
+            handled = super.onOptionsItemSelected(item);
+        }
+
+        return handled;
+    }
+
+    private void startEventsListFragment(){
 
     }
 
