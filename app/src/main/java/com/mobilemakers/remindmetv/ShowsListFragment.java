@@ -1,5 +1,6 @@
 package com.mobilemakers.remindmetv;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
@@ -13,9 +14,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
@@ -27,7 +31,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
+//
 public class ShowsListFragment extends ListFragment {
 
     public static final String EXTRA_SEARCH = "extra_search";
@@ -35,6 +39,7 @@ public class ShowsListFragment extends ListFragment {
     ShowAdapter mAdapter;
     EditText mEditShowName;
     ImageButton mImageButtonSearch;
+    RelativeLayout mProgressLayout;
     TransitionDrawable mTransitionImageButton;
     TransitionDrawable mTransitionEditText;
     CustomListener customListener = new CustomListener(true);
@@ -94,6 +99,7 @@ public class ShowsListFragment extends ListFragment {
     private void wireUpViews(View rootView) {
         mEditShowName = (EditText) rootView.findViewById(R.id.edit_text_search_list);
         mImageButtonSearch = (ImageButton) rootView.findViewById(R.id.image_button_search);
+        mProgressLayout = (RelativeLayout)rootView.findViewById(R.id.loadingPanel);
     }
 
     private void setClickListener() {
@@ -133,6 +139,7 @@ public class ShowsListFragment extends ListFragment {
 
     private void fetchShowsInQueue(String showName) {
         try {
+            mProgressLayout.setVisibility(View.VISIBLE);
             URL url = constructURLQuery(showName);
             Request request = new Request.Builder().url(url.toString()).build();
             OkHttpClient client = new OkHttpClient();
@@ -154,6 +161,7 @@ public class ShowsListFragment extends ListFragment {
                             mAdapter.addAll(listOfShows);
                             //Only for compatibility
                             mAdapter.notifyDataSetChanged();
+                            mProgressLayout.setVisibility(View.GONE);
                         }
                     });
                 }
@@ -201,7 +209,15 @@ public class ShowsListFragment extends ListFragment {
             if (isEnabled) {
                 String showName = mEditShowName.getText().toString();
                 fetchShowsInQueue(showName);
+                hideKeyboard();
             }
+        }
+
+        private void hideKeyboard() {
+            mEditShowName.clearFocus();
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(mEditShowName.getWindowToken(), 0);
         }
     }
 
