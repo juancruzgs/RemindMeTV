@@ -27,7 +27,11 @@
         </activity>
         <activity
             android:name=".CompleteInformationActivity"
-            android:label="@string/title_activity_complete_information" >
+            android:label="@string/title_activity_complete_information"
+            android:parentActivityName="com.mobilemakers.remindmetv.ShowsListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mobilemakers.remindmetv.ShowsListActivity" />
         </activity>
     </application>
 
