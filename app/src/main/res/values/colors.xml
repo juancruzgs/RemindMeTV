@@ -6,6 +6,7 @@
     <color name="primary_light127">#7fb2ebf2</color>
     <color name="primary_light192">#ff78f0ff</color>
     <color name="accent">#FFC107</color>
+    <color name="accent_127">#40ffc107</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#727272</color>
     <color name="icons">#FFFFFF</color>

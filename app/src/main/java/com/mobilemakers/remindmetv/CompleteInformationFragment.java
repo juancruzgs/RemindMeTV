@@ -2,13 +2,18 @@ package com.mobilemakers.remindmetv;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Layout;
+import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -203,15 +208,16 @@ public class CompleteInformationFragment extends Fragment {
         if (getArguments().containsKey(EXTRA_SHOW)){
             mShow = getArguments().getParcelable(EXTRA_SHOW);
             mTextViewShowName.setText(mShow.getName());
-            mTextViewChannel.setText(mShow.getChannel());
-            mTextViewStatus.setText(mShow.getStatus());
+            mTextViewChannel.setText(String.format(getString(R.string.info_channel), mShow.getChannel()));
+            mTextViewStatus.setText(String.format(getString(R.string.info_status), mShow.getStatus()));
             mTextViewLink.setText(mShow.getURL());
-            mTextViewStarted.setText(mShow.getStartedDate());
-            mTextViewEnded.setText(mShow.getEndedDate());
-            mTextViewSeasons.setText(String.valueOf(mShow.getSeasons()));
-            mTextViewRuntime.setText(String.valueOf(mShow.getRuntime()));
-            mTextViewAirtime.setText(mShow.getAirtime());
-            mTextViewAirday.setText(mShow.getAirday());
+            mTextViewStarted.setText(String.format(getString(R.string.info_started_date), mShow.getStartedDate()));
+            mTextViewEnded.setText(String.format(getString(R.string.info_ended_date), mShow.getEndedDate()));
+            mTextViewSeasons.setText(String.format(getString(R.string.info_seasons), String.valueOf(mShow.getSeasons())));
+            mTextViewRuntime.setText(String.format(getString(R.string.info_runtime), String.valueOf(mShow.getRuntime())));
+            mTextViewAirtime.setText(String.format(getString(R.string.info_airtime), mShow.getAirtime()));
+            mTextViewAirday.setText(String.format(getString(R.string.info_airday), mShow.getAirday()));
         }
     }
+
 }
