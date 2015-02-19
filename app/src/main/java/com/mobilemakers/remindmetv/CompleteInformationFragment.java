@@ -214,6 +214,7 @@ public class CompleteInformationFragment extends Fragment {
             mTextViewChannel.setText(String.format(getString(R.string.info_channel), mShow.getChannel()));
             mTextViewStatus.setText(String.format(getString(R.string.info_status), mShow.getStatus()));
             mTextViewLink.setText(Html.fromHtml(String.format(getString(R.string.textView_link), mShow.getURL(), mShow.getName())));
+            mTextViewLink.setMovementMethod(LinkMovementMethod.getInstance());
             mTextViewStarted.setText(String.format(getString(R.string.info_started_date), mShow.getStartedDate()));
             mTextViewEnded.setText(String.format(getString(R.string.info_ended_date), mShow.getEndedDate()));
             mTextViewSeasons.setText(String.format(getString(R.string.info_seasons), String.valueOf(mShow.getSeasons())));
