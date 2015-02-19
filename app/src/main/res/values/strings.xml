@@ -18,10 +18,11 @@
     <string name="info_started_date">Started: %s</string>
     <string name="info_ended_date">Ended: %s</string>
     <string name="info_seasons">Seasons: %s</string>
-    <string name="info_runtime">Runtime: %s</string>
+    <string name="info_runtime">Runtime: %s min.</string>
     <string name="info_airtime">Air time: %s</string>
     <string name="info_airday">Air day: %s</string>
     <string name="textView_watch">Air info</string>
     <string name="textView_info">Info</string>
+    <string name="textView_link" formatted="false"><![CDATA[Web summary for <a href=\"%s\">%s</a>]]></string>
 
 </resources>

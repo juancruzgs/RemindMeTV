@@ -56,6 +56,7 @@ public class ShowsListFragment extends ListFragment {
     private void wireupTransitions() {
         mTransitionEditText = (TransitionDrawable) mEditShowName.getBackground();
         mTransitionImageButton = (TransitionDrawable) mImageButtonSearch.getBackground();
+
     }
 
     private void setTextWatcher() {
