@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
@@ -35,6 +36,7 @@ public class ShowsListFragment extends ListFragment {
     ShowAdapter mAdapter;
     EditText mEditShowName;
     ImageButton mImageButtonSearch;
+    RelativeLayout mProgressLayout;
     TransitionDrawable mTransitionImageButton;
     TransitionDrawable mTransitionEditText;
     CustomListener customListener = new CustomListener(true);
@@ -94,6 +96,7 @@ public class ShowsListFragment extends ListFragment {
     private void wireUpViews(View rootView) {
         mEditShowName = (EditText) rootView.findViewById(R.id.edit_text_search_list);
         mImageButtonSearch = (ImageButton) rootView.findViewById(R.id.image_button_search);
+        mProgressLayout = (RelativeLayout)rootView.findViewById(R.id.loadingPanel);
     }
 
     private void setClickListener() {
@@ -133,6 +136,7 @@ public class ShowsListFragment extends ListFragment {
 
     private void fetchShowsInQueue(String showName) {
         try {
+            mProgressLayout.setVisibility(View.VISIBLE);
             URL url = constructURLQuery(showName);
             Request request = new Request.Builder().url(url.toString()).build();
             OkHttpClient client = new OkHttpClient();
@@ -154,6 +158,7 @@ public class ShowsListFragment extends ListFragment {
                             mAdapter.addAll(listOfShows);
                             //Only for compatibility
                             mAdapter.notifyDataSetChanged();
+                            mProgressLayout.setVisibility(View.GONE);
                         }
                     });
                 }
