@@ -14,12 +14,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -28,8 +32,11 @@ public class CompleteInformationFragment extends Fragment {
 
     public static final String EXTRA_SHOW = "SHOW";
     private static final int REQUEST_CODE = 2;
+    private static final int EVENT_NOT_FOUND = 1;
+    private static final String EVENT_ALREADY_CREATED= "Event Already Created";
 
     DatabaseHelper mDatabaseHelper = null;
+    ContentResolver mContentResolver;
 
     Show mShow;
     TextView mTextViewShowName;
@@ -84,7 +91,46 @@ public class CompleteInformationFragment extends Fragment {
         buttonAddToCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startCalendarIntentWithExtras();
+                try {
+                    Event event = returnEventFromDatabase();
+                    if (event == null) {
+                        startCalendarIntentWithExtras();
+                    }
+                    else {
+                     //Event in database
+                        if (!eventExistsInCalendar(event.getId())) {
+                            try {
+                                Dao<Event, Integer> dao = getDatabaseHelper().getEventDao();
+                                dao.delete(event);
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                            startCalendarIntentWithExtras();
+                        }
+                        else {
+                        //Event in calendar too
+                            Toast.makeText(getActivity(), EVENT_ALREADY_CREATED, Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            private Event returnEventFromDatabase() throws SQLException {
+                Dao<Event, Integer> dao = getDatabaseHelper().getEventDao();
+                QueryBuilder<Event, Integer> queryBuilder = dao.queryBuilder();
+                queryBuilder.where().eq(Event.TITLE ,mShow.getName());
+                PreparedQuery<Event> preparedQuery = queryBuilder.prepare();
+                List<Event> eventList = dao.query(preparedQuery);
+                if (!eventList.isEmpty()){
+                    return eventList.get(0);
+                }
+                else {
+                    return null;
+                }
+
             }
 
             private void startCalendarIntentWithExtras() {
@@ -156,6 +202,21 @@ public class CompleteInformationFragment extends Fragment {
                 mHour = Integer.valueOf(hourAndMinutes.substring(0,colonIndex));
                 mMinutes = Integer.valueOf(hourAndMinutes.substring(colonIndex+1, hourAndMinutes.length()));
             }
+
+            private boolean eventExistsInCalendar(Integer eventID){
+
+                final String[] EVENT_PROJECTION = new String[]{
+                        CalendarContract.Events._ID,
+                };
+
+                Cursor cursorEvents;
+                Uri eventsUri = CalendarContract.Events.CONTENT_URI;
+                //Filter by BEGIN_TIME and DURATION
+                String eventSelection = "(" + CalendarContract.Events._ID  + " = " + eventID +")";
+                cursorEvents = mContentResolver.query(eventsUri, EVENT_PROJECTION, eventSelection, null, null);
+
+                return cursorEvents.moveToNext();
+            }
         });
     }
 
@@ -167,52 +228,48 @@ public class CompleteInformationFragment extends Fragment {
         if (requestCode == REQUEST_CODE) {
             final int REMINDER_MINUTES = 15;
 
-            String duration = "P" + String.valueOf(mShow.getRuntime()*60) +"S";
+            int eventID = returnEventIDFromCalendar();
 
-            final String[] EVENT_PROJECTION = new String[]{
-                    CalendarContract.Events._ID,
-            };
+            if (eventID != EVENT_NOT_FOUND){
+                saveEventInDatabase(eventID);
 
-            Cursor cursorEvents;
-            ContentResolver cr = getActivity().getContentResolver();
-            Uri eventsUri = CalendarContract.Events.CONTENT_URI;
-            //Filter by BEGIN_TIME and DURATION
-            String eventSelection = "((" + CalendarContract.Events.DTSTART  + " = " + mStartTime + ") AND " +
-                                "(" + CalendarContract.Events.DURATION + " = '" + duration + "'))";
-            cursorEvents = cr.query(eventsUri, EVENT_PROJECTION, eventSelection, null, null);
-
-            if (cursorEvents.moveToNext()) {
-                //Event was created
-                Integer eventID =  cursorEvents.getInt(0);
-
-                Event event = new Event();
-                event.setId(eventID);
-                event.setTitle(mShow.getName());
-                saveEventInDatabase(event);
-
-                final String[] REMINDER_PROJECTION = new String[]{
-                        CalendarContract.Reminders._ID
-                };
-
-                Cursor cursorReminders;
                 Uri remindersUri = CalendarContract.Reminders.CONTENT_URI;
-                //Filter by EVENT_ID
-                String reminderSelection = "(" + CalendarContract.Reminders.EVENT_ID  + " = " + eventID +")";
-                cursorReminders = cr.query(remindersUri, REMINDER_PROJECTION, reminderSelection, null , null);
-
                 //Event without reminders
-                if (!cursorReminders.moveToNext()) {
-                    ContentValues values = new ContentValues();
-                    values.put(CalendarContract.Reminders.MINUTES, REMINDER_MINUTES);
-                    values.put(CalendarContract.Reminders.EVENT_ID, eventID);
-                    values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
-                    Uri rowUri = cr.insert(remindersUri, values);
+                if (!eventHasReminders(remindersUri,eventID)) {
+                    saveDefaultReminderForEventInCalendar(REMINDER_MINUTES, mContentResolver, eventID, remindersUri);
                 }
             }
         }
     }
 
-    private void saveEventInDatabase(Event event){
+    private int returnEventIDFromCalendar(){
+        String duration = "P" + String.valueOf(mShow.getRuntime()*60) +"S";
+
+        final String[] EVENT_PROJECTION = new String[]{
+                CalendarContract.Events._ID,
+        };
+
+        Cursor cursorEvents;
+        Uri eventsUri = CalendarContract.Events.CONTENT_URI;
+        //Filter by BEGIN_TIME and DURATION
+        String eventSelection = "((" + CalendarContract.Events.DTSTART  + " = " + mStartTime + ") AND " +
+                "(" + CalendarContract.Events.DURATION + " = '" + duration + "'))";
+        cursorEvents = mContentResolver.query(eventsUri, EVENT_PROJECTION, eventSelection, null, null);
+
+        if (cursorEvents.moveToNext()) {
+            //Event was created
+            return cursorEvents.getInt(0);
+        }
+        else {
+            return EVENT_NOT_FOUND;
+        }
+    }
+
+    private void saveEventInDatabase(int eventID) {
+        Event event = new Event();
+        event.setId(eventID);
+        event.setTitle(mShow.getName());
+
         try {
             Dao<Event, Integer> dao = getDatabaseHelper().getEventDao();
             dao.create(event);
@@ -221,10 +278,32 @@ public class CompleteInformationFragment extends Fragment {
         }
     }
 
+    private boolean eventHasReminders(Uri remindersUri, Integer eventID){
+        final String[] REMINDER_PROJECTION = new String[]{
+                CalendarContract.Reminders._ID
+        };
+
+        Cursor cursorReminders;
+        String reminderSelection = "(" + CalendarContract.Reminders.EVENT_ID  + " = " + eventID +")";
+
+        cursorReminders = mContentResolver.query(remindersUri, REMINDER_PROJECTION, reminderSelection, null , null);
+
+        return cursorReminders.moveToNext();
+    }
+
+    private void saveDefaultReminderForEventInCalendar(int REMINDER_MINUTES, ContentResolver cr, int eventID, Uri remindersUri) {
+        ContentValues values = new ContentValues();
+        values.put(CalendarContract.Reminders.MINUTES, REMINDER_MINUTES);
+        values.put(CalendarContract.Reminders.EVENT_ID, eventID);
+        values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT);
+        cr.insert(remindersUri, values);
+    }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         prepareTextViews();
+        mContentResolver = getActivity().getContentResolver();
     }
 
     private void prepareTextViews() {
