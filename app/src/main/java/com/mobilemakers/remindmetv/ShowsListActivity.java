@@ -1,5 +1,6 @@
 package com.mobilemakers.remindmetv;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -27,7 +28,6 @@ public class ShowsListActivity extends ActionBarActivity {
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -37,7 +37,25 @@ public class ShowsListActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        int menuId = item.getItemId();
+        Boolean handled = false;
+
+        switch(menuId){
+            case R.id.action_events_list:
+                startEventsListActivity();
+                handled = true;
+                break;
+        }
+
+        if (!handled) {
+            handled = super.onOptionsItemSelected(item);
+        }
+
+        return handled;
     }
 
+    private void startEventsListActivity(){
+        Intent intent = new Intent(ShowsListActivity.this, EventsListActivity.class);
+        startActivity(intent);
+    }
 }

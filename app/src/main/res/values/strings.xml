@@ -24,5 +24,7 @@
     <string name="textView_watch">Air info</string>
     <string name="textView_info">Info</string>
     <string name="action_events_list">Events List</string>
+    <string name="title_activity_events_list">Events List</string>
+    <string name="button_delete_event">Delete</string>
 
 </resources>

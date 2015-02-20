@@ -59,7 +59,8 @@
                 android:layout_height="45dp"
                 android:gravity="center"
                 android:hint="@string/editText_startscreen_search_hint"
-                android:background="@drawable/transition_edittext_main_screen" />
+                android:background="@drawable/transition_edittext_main_screen"
+                android:maxLines="1"/>
 
             <ImageButton
                 android:id="@+id/imageButton_startscreen_search"
