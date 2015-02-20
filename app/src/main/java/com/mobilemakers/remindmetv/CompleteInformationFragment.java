@@ -2,24 +2,23 @@ package com.mobilemakers.remindmetv;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Canvas;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.Layout;
-import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.Dao;
+
+import java.sql.SQLException;
 import java.util.Calendar;
 
 /**
@@ -29,6 +28,8 @@ public class CompleteInformationFragment extends Fragment {
 
     public static final String EXTRA_SHOW = "SHOW";
     private static final int REQUEST_CODE = 2;
+
+    DatabaseHelper mDatabaseHelper = null;
 
     Show mShow;
     TextView mTextViewShowName;
@@ -47,6 +48,13 @@ public class CompleteInformationFragment extends Fragment {
     int mMinutes;
 
     public CompleteInformationFragment() {
+    }
+
+    public DatabaseHelper getDatabaseHelper() {
+        if (mDatabaseHelper == null){
+            mDatabaseHelper = OpenHelperManager.getHelper(getActivity(), DatabaseHelper.class);
+        }
+        return mDatabaseHelper;
     }
 
     @Override
@@ -80,7 +88,7 @@ public class CompleteInformationFragment extends Fragment {
             }
 
             private void startCalendarIntentWithExtras() {
-                final String EVENT_DESCRIPTION = "RemindMeTV Event";
+                //final String EVENT_DESCRIPTION = "RemindMeTV Event";
                 final String EVENT_RRULE = "FREQ=WEEKLY;COUNT=50";
 
                 int day = parseAirdayFromShow();
@@ -102,7 +110,7 @@ public class CompleteInformationFragment extends Fragment {
                 Intent intent = new Intent(Intent.ACTION_EDIT);
                 intent.setData(CalendarContract.Events.CONTENT_URI);
                 intent.putExtra(CalendarContract.Events.TITLE, mShow.getName());
-                intent.putExtra(CalendarContract.Events.DESCRIPTION, EVENT_DESCRIPTION);
+                intent.putExtra(CalendarContract.Events.DESCRIPTION, String.format(getString(R.id.event_description), mShow.getChannel()));
                 intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis());
                 intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis());
                 intent.putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
@@ -174,7 +182,13 @@ public class CompleteInformationFragment extends Fragment {
             cursorEvents = cr.query(eventsUri, EVENT_PROJECTION, eventSelection, null, null);
 
             if (cursorEvents.moveToNext()) {
+                //Event was created
                 Integer eventID =  cursorEvents.getInt(0);
+
+                Event event = new Event();
+                event.setId(eventID);
+                event.setTitle(mShow.getName());
+                saveEventInDatabase(event);
 
                 final String[] REMINDER_PROJECTION = new String[]{
                         CalendarContract.Reminders._ID
@@ -195,6 +209,15 @@ public class CompleteInformationFragment extends Fragment {
                     Uri rowUri = cr.insert(remindersUri, values);
                 }
             }
+        }
+    }
+
+    private void saveEventInDatabase(Event event){
+        try {
+            Dao<Event, Integer> dao = getDatabaseHelper().getEventDao();
+            dao.create(event);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -220,4 +243,12 @@ public class CompleteInformationFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        if (mDatabaseHelper != null){
+            OpenHelperManager.releaseHelper();
+            mDatabaseHelper = null;
+        }
+        super.onDestroy();
+    }
 }

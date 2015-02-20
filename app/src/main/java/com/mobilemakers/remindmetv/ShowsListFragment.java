@@ -17,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -152,7 +151,7 @@ public class ShowsListFragment extends ListFragment {
             URL url = constructURLQuery(showName);
             Request request = new Request.Builder().url(url.toString()).build();
             OkHttpClient client = new OkHttpClient();
-            //Enqueue for Async mode --- Execute for Sync mode
+
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Request request, IOException e) {
@@ -168,7 +167,6 @@ public class ShowsListFragment extends ListFragment {
                         public void run() {
                             mAdapter.clear();
                             mAdapter.addAll(listOfShows);
-                            //Only for compatibility
                             mAdapter.notifyDataSetChanged();
                             mProgressLayout.setVisibility(View.GONE);
                         }
@@ -214,7 +212,7 @@ public class ShowsListFragment extends ListFragment {
 
         switch(menuId){
             case R.id.action_events_list:
-                startEventsListFragment();
+                startEventsListActivity();
                 handled = true;
                 break;
         }
@@ -226,8 +224,9 @@ public class ShowsListFragment extends ListFragment {
         return handled;
     }
 
-    private void startEventsListFragment(){
-
+    private void startEventsListActivity(){
+        Intent intent = new Intent(getActivity(), EventsListActivity.class);
+        startActivity(intent);
     }
 
     private class CustomListener implements View.OnClickListener{
