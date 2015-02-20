@@ -66,6 +66,7 @@ public class ShowsListFragment extends ListFragment {
     private void wireupTransitions() {
         mTransitionEditText = (TransitionDrawable) mEditShowName.getBackground();
         mTransitionImageButton = (TransitionDrawable) mImageButtonSearch.getBackground();
+
     }
 
     private void setTextWatcher() {
@@ -134,8 +135,9 @@ public class ShowsListFragment extends ListFragment {
     }
 
     private void searchForInitialCall() {
-        if (getArguments().containsKey(EXTRA_SEARCH)) {
-            String searchName = getArguments().getString(EXTRA_SEARCH);
+        Bundle bundle = getArguments();
+        if (bundle != null && bundle.containsKey(EXTRA_SEARCH)) {
+            String searchName = bundle.getString(EXTRA_SEARCH);
             mEditShowName.setText(searchName);
             mEditShowName.setSelection(mEditShowName.getText().length());
             fetchShowsInQueue(searchName);

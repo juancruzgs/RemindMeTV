@@ -18,9 +18,11 @@ public class ShowsListActivity extends ActionBarActivity {
         if (savedInstanceState == null) {
             ShowsListFragment showListFragment = new ShowsListFragment();
             String search = getIntent().getStringExtra(EXTRA_SEARCH);
-            Bundle bundle = new Bundle();
-            bundle.putString(ShowsListFragment.EXTRA_SEARCH, search);
-            showListFragment.setArguments(bundle);
+            if (search != null) {
+                Bundle bundle = new Bundle();
+                bundle.putString(ShowsListFragment.EXTRA_SEARCH, search);
+                showListFragment.setArguments(bundle);
+            }
 
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, showListFragment)

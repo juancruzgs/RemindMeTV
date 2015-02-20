@@ -34,6 +34,13 @@ public class StartScreenFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mEditTextSearch.setText("");
+        reseetTransitions();
+    }
+
     private void wireupTransitions() {
         mTransitionImageButton = (TransitionDrawable) mImageButtonSearch.getBackground();
         mTransitionEditText = (TransitionDrawable) mEditTextSearch.getBackground();
@@ -102,8 +109,6 @@ public class StartScreenFragment extends Fragment {
             if (isEnabled) {
                 Intent searchIntent = new Intent(getActivity(), ShowsListActivity.class);
                 searchIntent.putExtra(ShowsListActivity.EXTRA_SEARCH , mEditTextSearch.getText().toString());
-                mEditTextSearch.setText("");
-                reseetTransitions();
                 startActivity(searchIntent);
             }
         }
