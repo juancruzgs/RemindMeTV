@@ -99,12 +99,7 @@ public class CompleteInformationFragment extends Fragment {
                     else {
                      //Event in database
                         if (!eventExistsInCalendar(event.getId())) {
-                            try {
-                                Dao<Event, Integer> dao = getDatabaseHelper().getEventDao();
-                                dao.delete(event);
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
+                            deleteEventInDatabase(event);
                             startCalendarIntentWithExtras();
                         }
                         else {
@@ -113,6 +108,15 @@ public class CompleteInformationFragment extends Fragment {
                         }
                     }
 
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            private void deleteEventInDatabase(Event event) {
+                try {
+                    Dao<Event, Integer> dao = getDatabaseHelper().getEventDao();
+                    dao.delete(event);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

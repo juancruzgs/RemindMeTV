@@ -42,7 +42,6 @@ public final class ShowParser {
             parser.setInput(is, null);
             parser.nextTag();
             shows = readShows(parser);
-            //TODO In finally
             is.close();
         } catch (XmlPullParserException | IOException e) {
             e.printStackTrace();
