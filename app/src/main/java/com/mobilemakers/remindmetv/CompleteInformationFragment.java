@@ -222,8 +222,10 @@ public class CompleteInformationFragment extends Fragment {
             mTextViewShowName.setText(mShow.getName());
             mTextViewChannel.setText(" " + mShow.getChannel());
             mTextViewStatus.setText(" " + mShow.getStatus());
-            if (mShow.getStatus().toLowerCase().contains("canceled/ended")){
+            if (mShow.getStatus().toLowerCase().contains("canceled") || mShow.getStatus().toLowerCase().contains("ended") ){
                 mTextViewStatus.setTextColor(Color.RED);
+            }else {
+                mTextViewStatus.setTextColor(Color.BLUE);
             }
             mTextViewLink.setText(Html.fromHtml(" " + String.format(getString(R.string.textView_link), mShow.getURL(), mShow.getName())));
             mTextViewLink.setMovementMethod(LinkMovementMethod.getInstance());
@@ -243,8 +245,8 @@ public class CompleteInformationFragment extends Fragment {
                 mTextViewAirInfoTag.setLayoutParams(params);
                 mLayoutAirInfo.setVisibility(View.INVISIBLE);
             }else {
-                mTextViewAirtime.setText(mShow.getAirtime());
-                mTextViewAirday.setText(mShow.getAirday());
+                mTextViewAirtime.setText(" " + mShow.getAirtime());
+                mTextViewAirday.setText(" " + mShow.getAirday());
             }
         }
     }

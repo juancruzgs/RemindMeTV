@@ -13,8 +13,6 @@
     <string name="title_activity_complete_information">Complete Information</string>
     <string name="button_add_to_calendar">Remind me!</string>
     <string name="image_button_search_description">Search!</string>
-    <string name="info_airtime">Air time: %s</string>
-    <string name="info_airday">Air day: %s</string>
     <string name="textView_watch">Air info</string>
     <string name="textView_info">Info</string>
     <string name="textView_link" formatted="false"><![CDATA[<a href=\"%s\">%s</a>]]></string>
@@ -25,5 +23,7 @@
     <string name="textView_ended_tag">Ended:</string>
     <string name="textView_season_tag">Seasons:</string>
     <string name="textView_runtime_tag">Runtime:</string>
+    <string name="textView_airtime_tag">Air time:</string>
+    <string name="textView_airday_tag">Air day:</string>
 
 </resources>
