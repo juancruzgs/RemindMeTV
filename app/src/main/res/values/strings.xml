@@ -6,23 +6,24 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_shows_list">Shows List</string>
     <string name="edit_text_show_list_search_hint">Search for a TV Show</string>
-    <string name="textView_welcome_message">Welcome to RemindMeTv !</string>
+    <string name="textView_welcome_message">Welcome to RemindMeTV !</string>
     <string name="textView_startscreen_tip">Type a TV show, program or movie and tap the magnifying glass to start…</string>
     <string name="button_startscreen_search">Find</string>
-    <string name="editText_startscreen_search_hint">Type your keywords here...</string>
+    <string name="editText_startscreen_search_hint">Type your keywords here&#8230;</string>
     <string name="title_activity_complete_information">Complete Information</string>
-    <string name="button_add_to_calendar">Add reminder!</string>
+    <string name="button_add_to_calendar">Remind me!</string>
     <string name="image_button_search_description">Search!</string>
-    <string name="info_channel">Channel: %s</string>
-    <string name="info_status">Status: %s</string>
-    <string name="info_started_date">Started: %s</string>
-    <string name="info_ended_date">Ended: %s</string>
-    <string name="info_seasons">Seasons: %s</string>
-    <string name="info_runtime">Runtime: %s min.</string>
     <string name="info_airtime">Air time: %s</string>
     <string name="info_airday">Air day: %s</string>
     <string name="textView_watch">Air info</string>
     <string name="textView_info">Info</string>
-    <string name="textView_link" formatted="false"><![CDATA[Web summary for <a href=\"%s\">%s</a>]]></string>
+    <string name="textView_link" formatted="false"><![CDATA[<a href=\"%s\">%s</a>]]></string>
+    <string name="textView_channel_tag">Channel:</string>
+    <string name="textView_status_tag">Status:</string>
+    <string name="textView_link_tag">Web summary for</string>
+    <string name="textView_started_tag">Started:</string>
+    <string name="textView_ended_tag">Ended:</string>
+    <string name="textView_season_tag">Seasons:</string>
+    <string name="textView_runtime_tag">Runtime:</string>
 
 </resources>

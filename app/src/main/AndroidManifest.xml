@@ -9,6 +9,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon_remindmetv_antenna"
+        android:logo="@drawable/icon_remindmetv_antenna"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
